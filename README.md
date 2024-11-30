@@ -49,6 +49,4 @@ npm install
 ### Open the application
 
 Open your browser and navigate to http://localhost:5173 to view the application.
-
-Make a read me file like this but change the language of the sentence a bit
 ```
