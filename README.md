@@ -50,3 +50,10 @@ npm install
 
 Open your browser and navigate to http://localhost:5173 to view the application.
 ```
+
+### Demo of the Project
+
+
+https://github.com/user-attachments/assets/e43e582a-62e9-4160-9fb5-1f263149e75e
+
+
