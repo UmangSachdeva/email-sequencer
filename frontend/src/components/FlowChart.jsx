@@ -15,6 +15,7 @@ import CustomModal from "./CustomModal";
 import customToast from "../utils/CustomToast";
 import CustomNode from "./CustomNode";
 import ConnectingLines from "./ConnectingLines";
+import { Loader } from "lucide-react";
 
 // Adding node types to render diffrent node styles for diffrent types of nodes
 const nodeTypes = {
@@ -26,6 +27,7 @@ const edgeTypes = {
 };
 
 const FlowChart = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
   const [nodeCount, setNodeCount] = useState(1);
@@ -78,8 +80,6 @@ const FlowChart = () => {
 
   // Handle the addition of a new node
   const handleAddNode = () => {
-    console.log("Adding node");
-
     if (selectedNodeType) {
       setModalContent(selectedNodeType);
       setIsOpen(true);
@@ -219,17 +219,23 @@ const FlowChart = () => {
 
   // Handle the process start
   const handleStartProcess = async () => {
-    const response = await axios.post(
-      `${import.meta.env.VITE_BASE_URL}/api/sequence/start-process`,
-      {
-        nodes,
-        edges,
+    setIsLoading(true);
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/sequence/start-process`,
+        {
+          nodes,
+          edges,
+        }
+      );
+      if (response.status === 200) {
+        setIsLoading(false);
+        customToast("Process Started Successfully", { type: "success" });
       }
-    );
-    if (response.status === 200) {
-      customToast("Process Started Successfully", { type: "success" });
-    } else {
-      alert("Error starting process");
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+      customToast(error.response.data.message, { type: "error" });
     }
   };
 
@@ -252,12 +258,19 @@ const FlowChart = () => {
             <option value="Cold-Email">Cold Email</option>
             <option value="Wait/Delay">Wait/Delay</option>
           </Select>
+          {nodes.length == 0 && (
+            <Button onClick={handleAddNode}>Add Recipient</Button>
+          )}
           <Button onClick={handleAddNode}>Add Node</Button>
           <Button
-            className="!bg-extra !text-primary hover:!bg-primary hover:!text-extra"
+            className="!bg-extra flex gap-2 !text-primary hover:!bg-primary hover:!text-extra"
             onClick={handleStartProcess}
+            disabled={isLoading}
           >
             Start Process
+            <span>
+              {isLoading && <Loader className="delay-300 animate-spin" />}
+            </span>
           </Button>
         </div>
       </div>

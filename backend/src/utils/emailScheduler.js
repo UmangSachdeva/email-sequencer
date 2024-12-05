@@ -71,13 +71,14 @@ const scheduleEmails = async (seq) => {
   if (!leadSourceNode) {
     console.log("No Lead-Source node found, skipping sequence");
     await Sequence.findByIdAndDelete(sequence._id);
-    return;
+    throw Error("No Lead-Source node found", { status: 400 })
+    // return;
   }
 
   // Extract the recipient email address from the lead source node label
   const to = leadSourceNode?.data?.label?.split("- (")[1].split(")")[0];
 
-  let totalDelay = 0; // Initialize total delay
+  let totalDelay = 1000 * 60 * 5; // Initialize total delay to start with default 1 hour delay
 
   // Iterate through the nodes in the sequence
   for (const node of sequence.nodes) {
@@ -107,7 +108,7 @@ const scheduleEmails = async (seq) => {
     }
   }
 
-  // Delete the sequence after scheduling all emails
+  // Update the sequence after scheduling all emails
   await Sequence.findByIdAndUpdate(sequence._id, { status: "scheduled" });
 };
 

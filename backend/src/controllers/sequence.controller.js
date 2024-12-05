@@ -11,7 +11,8 @@ const startProcess = asyncHandler(async (req, res) => {
     await scheduleEmails(newSequence);
     res.status(200).send("Sequence saved and emails scheduled");
   } catch (error) {
-    res.status(500).send("Error saving sequence");
+    console.error(error.message);
+    res.status(500).json({ status: 'error', message: error.message });
   }
 });
 
