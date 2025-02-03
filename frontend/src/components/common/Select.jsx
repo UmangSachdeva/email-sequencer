@@ -1,5 +1,3 @@
-import React from "react";
-
 function Select({ children, ...props }) {
   return (
     <select

@@ -1,8 +1,5 @@
 import { History, Mail, UserRound } from "lucide-react";
-import React, { useCallback } from "react";
 import { Handle, Position } from "reactflow";
-
-const handleStyle = { left: 10 };
 
 function CustomNode({ data, isConnectable }) {
   return (
